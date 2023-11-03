@@ -1,0 +1,30 @@
+{% include 'head.html' %}
+<style>
+body {
+  background-image: url("https://img.freepik.com/premium-vector/abstract-backgrounds-with-copy-space-greeting-card-cover-presentation-design-templates-pastel-color-social-media-template_310063-362.jpg");
+  background-size: cover;
+  height:200px;
+}
+</style>
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="card2 p-3" style="background-color:darkseagreen">
+      <form action="verifierLogin1" method="post">
+        <div class="text-center h4">Verifier Login</div>
+        <div class="mt-3">
+          <label for="verifier_email" class="form-label">Email</label>
+          <input type="email" name="verifier_email" id="verifier_email" placeholder="Enter Email" required class="form-control">
+        </div>
+        <div class="mt-3">
+          <label for="verifier_password" class="form-label">Password</label>
+          <input type="password" name="verifier_password" id="verifier_password" placeholder="Enter Password" required class="form-control">
+        </div>
+        <div class="mt-3">
+          <input type="submit" value="Login" class="btn btn-success w-100">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

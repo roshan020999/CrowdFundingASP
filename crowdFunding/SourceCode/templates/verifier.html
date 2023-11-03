@@ -1,0 +1,44 @@
+
+{% include 'adminHead.html' %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <div class="text-center" style="font-size:30px;color:black">Verifiers</div>
+    </div>
+    <div class="col-md-3">
+      <form action="addVerifier" method="post">
+        <a href="addVerifier" class="btn btn-primary w-100" style="background-color:wheat;color:black;">Add Verifier</a>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    {% for verifier in verifiers: %}
+    {% set location=get_location_id(verifier[6])%}
+    <div class="col-md-3 ">
+     <div class="card2 p-2" style="background-color:lightblue">
+        <div class="text-muted ">Name</div>
+       <div class="" style="font-size:18px">{{verifier[1]}}</div>
+        <div class="text-muted mt-2">Email</div>
+       <div class="" style="font-size:18px">{{verifier[2]}}</div>
+        <div class="text-muted mt-2">Phone Number</div>
+       <div class="" style="font-size:18px">{{verifier[3]}}</div>
+        <div class="text-muted mt-2">Address</div>
+       <div class="" style="font-size:18px">{{verifier[5]}}</div>
+       <div class="text-muted mt-2">Location Name</div>
+       <div class="" style="font-size:18px">{{location[1]}}</div>
+     </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,46 @@
+
+{% include 'adminHead.html' %}
+ <div class="container">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="card2 p-3">
+                <div class="text-center h4" >Add Verifier</div>
+                <form action="addVerifier1" method="post">
+                    <div class="mt-1">
+                        <label for="verifier_name" class="form-label">Name</label>
+                        <input type="text" name="verifier_name" id="verifier_name" required placeholder="Enter Name" class="form-control">
+                    </div>
+                    <div class="mt-1">
+                        <label for="verifier_email" class="form-label">Email</label>
+                        <input type="email" name="verifier_email" id="verifier_email" required placeholder="Enter Email" class="form-control">
+                    </div>
+                    <div class="mt-1">
+                        <label for="verifier_phone" class="form-label">Phone Number</label>
+                        <input type="number" name="verifier_phone" id="verifier_phone" required placeholder="Enter Number" class="form-control">
+                    </div>
+                     <div class="mt-1">
+                        <label for="verifier_password" class="form-label">Password</label>
+                        <input type="password" name="verifier_password" id="verifier_password" required placeholder="Enter Password" class="form-control">
+                    </div>
+                      <div class="mt-1">
+                        <label for="location_id" class="form-label">Location Name</label>
+                        <select name="location_id" id="location_id" required class="form-control">
+                            <option value="">Choose Location</option>
+                            {% for location in locations:%}
+                            <option value="{{location[0]}}">{{location[1]}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                      <div class="mt-1">
+                        <label for="verifier_address" class="form-label">Address</label>
+                        <textarea name="verifier_address" id="verifier_address" required placeholder="Enter Address" class="form-control"></textarea>
+                    </div>
+                      <div class="mt-3">
+                         <input type="submit" value="Add Verifier"  class="btn btn-success w-100">
+                     </div>
+                </form>
+            </div>
+          </div>
+        </div>
+ </div>

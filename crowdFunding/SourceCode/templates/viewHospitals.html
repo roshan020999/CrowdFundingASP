@@ -1,0 +1,41 @@
+
+{% include 'adminHead.html'%}
+<div class="container">
+  <div class="row">
+    <div class="text-center h4">View Hospitals</div>
+    <table class="table table-primary table-bordered mt-4">
+      <tr>
+        <thead>
+          <th>Hospital Name</th>
+          <th>Hospital Type</th>
+          <th>Hospital Code</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Location</th>
+          <th>Address</th>
+          <th>Status</th>
+          <th>Action</th>
+        </thead>
+      </tr>
+      <tbody>
+       {% for hospital in hospitals: %}
+       {% set location=get_location_id(hospital[9])%}
+        <td>{{hospital[1]}}</td>
+        <td>{{hospital[5]}}</td>
+        <td>{{hospital[6]}}</td>
+        <td>{{hospital[2]}}</td>
+        <td>{{hospital[3]}}</td>
+        <td>{{location[1]}}</td>
+        <td>{{hospital[7]}}</td>
+        <td>{{hospital[8]}}</td>
+        <td>{% if hospital[8]=='Unauthorised': %}
+            <a href="activateHospital?hospital_id={{hospital[0]}}"  class="btn btn-success">Authorised</a>
+        {% endif %}
+         {% if hospital[8]=='Authorised': %}
+            <a href="inactivateHospital?hospital_id={{hospital[0]}}"  class="btn btn-danger">Unauthorised</a>
+        {% endif %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

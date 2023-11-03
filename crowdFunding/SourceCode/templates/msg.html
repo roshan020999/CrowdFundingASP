@@ -1,0 +1,19 @@
+
+{% if session["role"] == 'Admin':%}
+    {% include 'adminHead.html' %}
+{% elif session["role"] == 'Hospital':%}
+    {% include 'hospitalHead.html' %}
+{% elif session["role"] == 'Verifier':%}
+    {% include 'verifierHead.html' %}
+{% elif session["role"] == 'Seeker':%}
+    {% include 'seekerHead.html' %}
+{% elif session["role"] == 'Donor':%}
+    {% include 'donorHead.html' %}
+{% else:%}
+    {% include 'head.html' %}
+{% endif %}
+<br><br>
+<div class="container">
+    <div class="text-center h3 {{color}} p-2">{{message}}</div>
+</div>
+

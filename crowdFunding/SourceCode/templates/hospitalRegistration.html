@@ -1,0 +1,68 @@
+{% include 'head.html' %}
+<style>
+body {
+  background-image: url("https://img.freepik.com/premium-vector/abstract-backgrounds-with-copy-space-greeting-card-cover-presentation-design-templates-pastel-color-social-media-template_310063-362.jpg");
+  background-size: cover;
+  height:200px;
+}
+</style>
+ <div class="container">
+     <div class="row">
+         <div class="card2 p-3" style="background-color:darkseagreen">
+             <div class="text-center h4 ">Hospital Registration</div>
+             <form action="hospitalRegister1" method="post">
+                 <div class="row">
+                     <div class="col-md-6 mt-2">
+                        <label for="name" class="form-label">Hospital Name</label>
+                        <input type="text" name="name" id="name"  required placeholder="Enter Name" class="form-control">
+                     </div>
+                      <div class="col-md-6 mt-2">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" id="email"  required placeholder="Enter Email" class="form-control">
+                      </div>
+                     <div class="col-md-6 mt-2">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="number" min="0" name="phone" id="phone"  required placeholder="Enter Number" class="form-control">
+                     </div>
+                     <div class="col-md-6 mt-2">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password"  name="password" id="password" required placeholder="Enter Password" class="form-control">
+                     </div>
+                      <div class="col-md-6 mt-2">
+                        <label for="hospital_type" class="form-label">Hospital Type</label>
+                        <input type="text" name="hospital_type" id="hospital_type"  required placeholder="Enter Type" class="form-control">
+                     </div>
+                      <div class="col-md-6 mt-2">
+                        <label for="hospital_code" class="form-label">Hospital Code</label>
+                        <input type="number" min="0" name="hospital_code" id="hospital_code"  required placeholder="Enter Code" class="form-control">
+                     </div>
+                      <div class="col-md-6 mt-2">
+                        <label for="account_number" class="form-label">Account Number</label>
+                        <input type="number" min="0" name="account_number" id="account_number"  required placeholder="Enter Number" class="form-control">
+                     </div>
+                       <div class="col-md-6 mt-2">
+                        <label for="location_id" class="form-label">Location Name</label>
+                        <select name="location_id" id="location_id" required class="form-control">
+                            <option value="">Choose Location</option>
+                            {% for location in locations:%}
+                            <option value="{{location[0]}}">{{location[1]}}</option>
+                            {% endfor %}
+                        </select>
+                       </div>
+                      <div class="col-md-6 mt-2">
+                         <label for="address" class="form-label">Address</label>
+                          <textarea name="address" id="address"  required placeholder="Enter Address" class="form-control"></textarea>
+                     </div>
+                     <div class="col-md-6 mt-2">
+                        <div class="row">
+                           <div class="col-md-8"></div>
+                           <div class="col-md-4 mt-4">
+                             <input type="submit" value="Register" class="btn btn-primary w-100">
+                           </div>
+                        </div>
+                     </div>
+                 </div>
+             </form>
+         </div>
+     </div>
+ </div>

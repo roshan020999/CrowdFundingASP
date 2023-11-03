@@ -1,0 +1,84 @@
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+  height:100vh;
+ background-image: url("");
+ background-position: center;
+
+}
+
+.nav2 {
+  max-width: 960px;
+  mask-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #ffffff 25%, #ffffff 75%, rgba(255, 255, 255, 0) 100%);
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+.nav2 ul {
+  text-align: center;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.2) 75%, rgba(255, 255, 255, 0) 100%);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.nav2 ul li {
+  display: inline-block;
+}
+
+.nav2 ul li a {
+  padding: 18px;
+  font-family: "Open Sans";
+  text-transform:uppercase;
+  color: rgba(0, 35, 122, 1);
+  font-size: 18px;
+  text-decoration: none;
+  display: block;
+}
+
+.nav2 ul li a:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.6);
+  background: rgba(255, 0, 255, 0.4);
+  color: rgba(0, 35, 122, 0.7);
+}
+.card2{
+	background-color:white;
+	width:100%;
+	border-radius:5px;
+	box-shadow: 0px 0px 10px #ddd;
+}
+
+</style>
+
+<head>
+<link rel="stylesheet" href="../static/css/mystyle.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+<div class="nav2">
+  <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a href="/adminLogin">Admin</a>
+    </li>
+    <li>
+      <a href="/hospitalLogin">Hospital</a>
+    </li>
+    <li>
+      <a href="/verifierLogin">Verifier</a>
+    </li>
+       <li>
+      <a href="/seekerLogin">Seeker</a>
+    </li>
+       <li>
+      <a href="/donorLogin">Donor</a>
+    </li>
+  </ul>
+</div>
+</body>

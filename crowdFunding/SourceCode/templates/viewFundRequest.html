@@ -1,0 +1,144 @@
+{% if session["role"] == 'Hospital':%}
+    {% include 'hospitalHead.html' %}
+{% elif session["role"] == 'Verifier':%}
+    {% include 'verifierHead.html' %}
+{% elif session["role"] == 'Seeker':%}
+    {% include 'seekerHead.html' %}
+{% elif session["role"] == 'Admin':%}
+    {% include 'adminHead.html' %}
+{% elif session["role"] == 'Donor':%}
+    {% include 'donorHead.html' %}
+{% endif %}
+<script>
+
+  function validate(request_id){
+     let remaining_amount = document.getElementById(request_id+"remaining_amount").value;
+     let amount =  document.getElementById(request_id+"amount").value;
+     remaining_amount = parseInt(remaining_amount)
+     amount = parseInt(amount)
+
+     if (remaining_amount < amount){
+        alert("Entered Amount Should Not Be Greater than Remaining amount")
+        return false;
+     }
+     return true;
+  }
+</script>
+<div class="container">
+  <div class="row">
+    {% for raise_request in raise_requests:%}
+    {% set hospital = get_hospital_id(raise_request[9])%}
+    {% set seeker = get_seeker_id(raise_request[8])%}
+    {% set donations = get_raise_request_by_raise_request_id(raise_request[0])%}
+    <div class="col-md-4">
+      <div class="card mt-1 p-2">
+            <div class="text-center h4">{{seeker[1]}}</div>
+             <td><img src="/static/images/{{raise_request[3]}}" style="max-width:70%;height:70px">
+                 <div class="row mt-2">
+                     <div class="col-md-5">
+                       <div class="text-muted" style="font-size:80%">Hospital Name</div>
+                     </div>
+                     <div class="col-md-7">
+                         <div class="h6">{{hospital[1]}}</div>
+                     </div>
+                     <div class="col-md-5  mt-1">
+                          <div class="text-muted" style="font-size:80%">Cause</div>
+                     </div>
+                       <div class="col-md-7  mt-1">
+                         <div class="h6">{{raise_request[1]}}</div>
+                     </div>
+                       <div class="col-md-5 mt-1">
+                           <div class="text-muted" style="font-size:80%">Required Amount</div>
+                      </div>
+                       <div class="col-md-7  mt-1">
+                         <div class="h6">${{raise_request[2]}}</div>
+                     </div>
+                       <div class="col-md-5 mt-1">
+                           <div class="text-muted" style="font-size:80%">Remaining Amount</div>
+                      </div>
+                     {% if donations == None%}
+                       <div class="col-md-7 mt-1">
+                         <div class="h6">${{float(raise_request[2])}}</div>
+                      </div>
+                     {% else %}
+                     <div class="col-md-7 mt-1">
+                         <div class="h6">${{float(raise_request[2])- float(donations)}}</div>
+
+                      </div>
+                     {% endif %}
+                       <div class="col-md-5 mt-1">
+                            <div class="text-muted" style="font-size:80%">Date</div>
+                      </div>
+                       <div class="col-md-7 mt-1">
+                         <div class="h6">{{raise_request[7]}}</div>
+                      </div>
+                      <div class="col-md-5 mt-1">
+                            <div class="text-muted" style="font-size:80%">Status</div>
+                      </div>
+                       <div class="col-md-7 mt-1">
+                       <div class="h6">{{raise_request[6]}}</div>
+                      </div>
+                     <div class="col-md-6 mt-2">
+                         <a href="../static/reports/{{raise_request[4]}}" class="btn btn-primary w-100" style="font-size:15px;">View Reports</a>
+                     </div>
+                     {% if session["role"] == 'Seeker' and raise_request[6] == "Seeker Raise Request"%}
+                     <div class="col-md-6 mt-2">
+                         <a href="cancelSeekerRequest?raise_request_id={{raise_request[0]}}" class="btn btn-danger w-100" style="font-size:15px;">Cancel Request</a>
+                     </div>
+                     {% endif %}
+                     {% if session["role"] == 'Hospital' and raise_request[6] == "Seeker Raise Request"%}
+                          <div class="col-md-3 mt-2">
+                             <a href="acceptSeekerRequest?raise_request_id={{raise_request[0]}}" class="btn btn-success w-100" style="font-size:13px;">Accept</a>
+                         </div>
+                          <div class="col-md-3 mt-2">
+                             <a href="rejectSeekerRequest?raise_request_id={{raise_request[0]}}" class="btn btn-danger w-100" style="font-size:13px;">Reject</a>
+                         </div>
+                     {% endif %}
+                      {% if session["role"] == 'Admin' and raise_request[6] == "Accepted by Hospital"%}
+                          <div class="col-md-3 mt-2">
+                             <a href="acceptByAdmin?raise_request_id={{raise_request[0]}}" class="btn btn-success w-100" style="font-size:13px;">Accept</a>
+                         </div>
+                          <div class="col-md-3 mt-2">
+                             <a href="rejectByAdmin?raise_request_id={{raise_request[0]}}" class="btn btn-danger w-100" style="font-size:13px;">Reject</a>
+                         </div>
+                     {% endif %}
+                       {% if session["role"] == 'Verifier' and raise_request[6] == "Accepted by Admin"%}
+                          <div class="col-md-3 mt-2">
+                             <a href="acceptByVerifier?raise_request_id={{raise_request[0]}}" class="btn btn-success w-100" style="font-size:13px;">Accept</a>
+                         </div>
+                          <div class="col-md-3 mt-2">
+                             <a href="rejectByVerifier?raise_request_id={{raise_request[0]}}" class="btn btn-danger w-100" style="font-size:13px;">Reject</a>
+                         </div>
+                     {% endif %}
+                     </div>
+                 {% if session["role"] == 'Donor' and raise_request[6] == "Accepted by Verifier"%}
+                 {% if float(raise_request[2])- float(donations)!=0.0 %}
+                    <form action="donateAmountForCause" method="get" onsubmit="return validate('{{raise_request[0]}}')">
+                     <div class="row">
+                         <div class="col-md-6 mt-1">
+                             <input type="hidden" name="raise_request_id"  value="{{raise_request[0]}}">
+                             <input type="hidden" name="required_amount" id="required_amount" value="{{raise_request[2]}}">
+                             <input type="hidden"  name="remaining_amount" id="{{raise_request[0]}}remaining_amount" {% if donations!=None: %} value="{{float(raise_request[2])- float(donations)}}"   {% endif %}     {% if donations==None: %}  value="{{float(raise_request[2])}}"   {% endif %}>
+
+                             <label class="form-label"><b>Amount</b></label>
+                             <input type="number" min="1" name="amount" id="{{raise_request[0]}}amount" required class="form-control">
+                              </div>
+                              <div class="col-md-6 mt-4">
+                                  <input type="submit" value="Donate" class="btn btn-success w-100" style="margin-top:11px">
+                              </div>
+                     </div>
+                  </form>
+                 {% endif %}
+                 {% endif %}
+                 <div class="mt-2">
+              <div class="text-muted" style="font-size:80%">Description</div>
+              <div class="h6">{{raise_request[5]}}</div>
+            </div>
+      </div>
+    </div>
+
+    {% endfor %}
+</div>
+</div>
+
+
