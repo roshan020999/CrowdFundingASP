@@ -1,17 +1,11 @@
 import os
-from flask import *
-from flask_login import *
-import pymysql
 
+from flask import Flask, request, render_template, session, redirect
+import pymysql
 app = Flask(__name__)
 app.secret_key = "energy"
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_ROOT = APP_ROOT + "/static"
-
-# Initialize Flask-Login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "adminLogin"
 
 conn = pymysql.connect(host="localhost", user="root", password="998971@momS", db="CrowdFunding")
 cursor = conn.cursor()
@@ -26,32 +20,22 @@ status_verifier_accepted = "Accepted by Verifier"
 status_verifier_rejected = "Rejected by Verifier"
 status_amount_donated = "Total Amount Donated"
 
-count = cursor.execute("select * from bankAccount")
+
+count = cursor.execute("select *from bankAccount")
 if count == 0:
-    cursor.execute("insert into bankAccount(account_number, account_balance, account_holder) values('345672897612', '0', 'Administrator')")
+    cursor.execute("insert into bankAccount(account_number,account_balance,account_holder) values('345672897612', '0','Administrator')")
     conn.commit()
 
-# Create a User class that inherits from UserMixin
-class User(UserMixin):
-    def __init__(self, user_id, role):
-        self.id = user_id
-        self.role = role
-
-# Load user by user ID (used by Flask-Login)
-@login_manager.user_loader
-def load_user(user_id):
-    # Implement this based on your user management logic.
-    # For example, you can query your database for user details.
-    # Return a User object with user_id and role.
-    return User(user_id, 'Admin')  # Change this based on your logic
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
 @app.route("/adminLogin")
 def adminLogin():
     return render_template("adminLogin.html")
+
 
 @app.route("/adminLogin1", methods=['post'])
 def adminLogin1():
@@ -59,20 +43,18 @@ def adminLogin1():
     password = request.form.get("password")
 
     if username == 'admin' and password == 'admin':
-        user = User(user_id='admin', role='Admin')
-        login_user(user)
+        session['role'] = 'Admin'
         return redirect("/adminHome")
     else:
         return render_template("msg.html", message="Invalid Login Details", color="bg-danger text-white")
 
+
 @app.route("/adminHome")
-@login_required
 def adminHome():
     return render_template("adminHome.html")
 
 
 @app.route("/location")
-@login_required
 def location():
     cursor.execute("select * from location")
     locations = cursor.fetchall()
@@ -80,13 +62,11 @@ def location():
 
 
 @app.route("/addLocation")
-@login_required
 def addLocation():
     return render_template("addLocation.html")
 
 
 @app.route("/addLocation1", methods=['post'])
-@login_required
 def addLocation1():
     location_name = request.form.get("location_name")
     cursor.execute("insert into location(location_name) values('" + str(location_name) + "')")
@@ -95,7 +75,6 @@ def addLocation1():
 
 
 @app.route("/verifier")
-@login_required
 def verifier():
     cursor.execute("select * from verifier")
     verifiers = cursor.fetchall()
@@ -103,7 +82,6 @@ def verifier():
 
 
 @app.route("/addVerifier")
-@login_required
 def addVerifier():
     cursor.execute("select * from location")
     locations = cursor.fetchall()
@@ -111,7 +89,6 @@ def addVerifier():
 
 
 @app.route("/addVerifier1", methods=['post'])
-@login_required
 def addVerifier1():
     verifier_name = request.form.get("verifier_name")
     verifier_email = request.form.get("verifier_email")
@@ -132,13 +109,11 @@ def get_location_id(location_id):
 
 
 @app.route("/hospitalLogin")
-@login_required
 def hospitalLogin():
     return render_template("hospitalLogin.html")
 
 
 @app.route("/hospitalLogin1", methods=['post'])
-@login_required
 def hospitalLogin1():
     email = request.form.get("email")
     password = request.form.get("password")
@@ -158,13 +133,11 @@ def hospitalLogin1():
 
 
 @app.route("/hospitalHome")
-@login_required
 def hospitalHome():
     return render_template("hospitalHome.html")
 
 
 @app.route("/hospitalRegistration")
-@login_required
 def hospitalRegistration():
     cursor.execute("select * from location")
     locations = cursor.fetchall()
@@ -172,7 +145,6 @@ def hospitalRegistration():
 
 
 @app.route("/hospitalRegister1", methods=['post'])
-@login_required
 def hospitalRegister1():
     name = request.form.get("name")
     email = request.form.get("email")
@@ -193,7 +165,6 @@ def hospitalRegister1():
 
 
 @app.route("/viewHospitals")
-@login_required
 def viewHospitals():
     cursor.execute("select * from hospitals")
     hospitals = cursor.fetchall()
@@ -201,7 +172,6 @@ def viewHospitals():
 
 
 @app.route("/activateHospital")
-@login_required
 def activateHospital():
     hospital_id = request.args.get("hospital_id")
     cursor.execute("update hospitals set status ='Authorised' where hospital_id='" + str(hospital_id) + "'")
@@ -210,7 +180,6 @@ def activateHospital():
 
 
 @app.route("/inactivateHospital")
-@login_required
 def inactivateHospital():
     hospital_id = request.args.get("hospital_id")
     cursor.execute("update hospitals set status ='Unauthorised' where hospital_id='" + str(hospital_id) + "'")
@@ -219,13 +188,11 @@ def inactivateHospital():
 
 
 @app.route("/seekerLogin")
-@login_required
 def seekerLogin():
     return render_template("seekerLogin.html")
 
 
 @app.route("/seekerLogin1", methods=['post'])
-@login_required
 def seekerLogin1():
     email = request.form.get("email")
     password = request.form.get("password")
@@ -245,13 +212,11 @@ def seekerLogin1():
 
 
 @app.route("/seekerHome")
-@login_required
 def seekerHome():
     return render_template("seekerHome.html")
 
 
 @app.route("/seekerRegistration")
-@login_required
 def seekerRegistration():
     cursor.execute("select * from location")
     locations = cursor.fetchall()
@@ -259,7 +224,6 @@ def seekerRegistration():
 
 
 @app.route("/seekerRegistration1", methods=['post'])
-@login_required
 def seekerRegistration1():
     name = request.form.get("name")
     email = request.form.get("email")
@@ -273,7 +237,6 @@ def seekerRegistration1():
 
 
 @app.route("/viewSeekers")
-@login_required
 def viewSeekers():
     cursor.execute("select * from seekers")
     seekers = cursor.fetchall()
@@ -281,7 +244,6 @@ def viewSeekers():
 
 
 @app.route("/activateSeeker")
-@login_required
 def activateSeeker():
     seeker_id = request.args.get("seeker_id")
     cursor.execute("update seekers set status ='Authorised' where seeker_id='" + str(seeker_id) + "'")
@@ -290,7 +252,6 @@ def activateSeeker():
 
 
 @app.route("/inactivateSeeker")
-@login_required
 def inactivateSeeker():
     seeker_id = request.args.get("seeker_id")
     cursor.execute("update seekers set status ='Unauthorised' where seeker_id='" + str(seeker_id) + "'")
@@ -299,7 +260,6 @@ def inactivateSeeker():
 
 
 @app.route("/raiseFundRequest")
-@login_required
 def raiseFundRequest():
     cursor.execute("select * from hospitals")
     hospitals = cursor.fetchall()
@@ -307,7 +267,6 @@ def raiseFundRequest():
 
 
 @app.route("/raiseFundRequest1", methods=['post'])
-@login_required
 def raiseFundRequest1():
     seeker_id = session['seeker_id']
     hospital_id = request.form.get("hospital_id")
@@ -330,7 +289,6 @@ def raiseFundRequest1():
 
 
 @app.route("/viewFundRequest")
-@login_required
 def viewFundRequest():
     cursor.execute("select * from raise_request")
     if session['role'] == "Hospital":
@@ -378,7 +336,6 @@ def get_seeker_id(seeker_id):
 
 
 @app.route("/cancelSeekerRequest")
-@login_required
 def cancelSeekerRequest():
     raise_request_id = request.args.get("raise_request_id")
     cursor.execute("update raise_request set status ='"+str(status_seeker_cancelled)+"' where raise_request_id='" + str(raise_request_id) + "'")
@@ -387,7 +344,6 @@ def cancelSeekerRequest():
 
 
 @app.route("/acceptSeekerRequest")
-@login_required
 def acceptSeekerRequest():
     raise_request_id = request.args.get("raise_request_id")
     cursor.execute("update raise_request set status ='"+str(status_hospital_accepted)+"' where raise_request_id='" + str(raise_request_id) + "'")
@@ -396,7 +352,6 @@ def acceptSeekerRequest():
 
 
 @app.route("/rejectSeekerRequest")
-@login_required
 def rejectSeekerRequest():
     raise_request_id = request.args.get("raise_request_id")
 
@@ -406,7 +361,6 @@ def rejectSeekerRequest():
 
 
 @app.route("/acceptByAdmin")
-@login_required
 def acceptByAdmin():
     raise_request_id = request.args.get("raise_request_id")
     cursor.execute("select * from verifier")
@@ -415,7 +369,6 @@ def acceptByAdmin():
 
 
 @app.route("/acceptByAdmin1", methods=['post'])
-@login_required
 def acceptByAdmin1():
     raise_request_id = request.form.get("raise_request_id")
     verifier_id = request.form.get("verifier_id")
@@ -425,7 +378,6 @@ def acceptByAdmin1():
 
 
 @app.route("/rejectByAdmin")
-@login_required
 def rejectByAdmin():
     raise_request_id = request.args.get("raise_request_id")
     cursor.execute("update raise_request set status ='"+str(status_admin_rejected)+"' where raise_request_id='" + str(raise_request_id) + "'")
@@ -434,7 +386,6 @@ def rejectByAdmin():
 
 
 @app.route("/acceptByVerifier")
-@login_required
 def acceptByVerifier():
     raise_request_id = request.args.get("raise_request_id")
     cursor.execute("update raise_request set status ='"+str(status_verifier_accepted)+"' where raise_request_id='" + str(raise_request_id) + "'")
@@ -443,7 +394,6 @@ def acceptByVerifier():
 
 
 @app.route("/rejectByVerifier")
-@login_required
 def rejectByVerifier():
     raise_request_id = request.args.get("raise_request_id")
     cursor.execute("update raise_request set status ='"+str(status_verifier_rejected)+"' where raise_request_id='" + str(raise_request_id) + "'")
@@ -452,13 +402,11 @@ def rejectByVerifier():
 
 
 @app.route("/verifierLogin")
-@login_required
 def verifierLogin():
     return render_template("verifierLogin.html")
 
 
 @app.route("/verifierLogin1", methods=['post'])
-@login_required
 def verifierLogin1():
     verifier_email = request.form.get("verifier_email")
     verifier_password = request.form.get("verifier_password")
@@ -474,19 +422,16 @@ def verifierLogin1():
 
 
 @app.route("/verifierHome")
-@login_required
 def verifierHome():
     return render_template("verifierHome.html")
 
 
 @app.route("/donorLogin")
-@login_required
 def donorLogin():
     return render_template("donorLogin.html")
 
 
 @app.route("/donorLogin1", methods=['post'])
-@login_required
 def donorLogin1():
     email = request.form.get("email")
     password = request.form.get("password")
@@ -504,13 +449,11 @@ def donorLogin1():
 
 
 @app.route("/donorHome")
-@login_required
 def donorHome():
     return render_template("donorHome.html")
 
 
 @app.route("/donorRegistration")
-@login_required
 def donorRegistration():
     cursor.execute("select * from location")
     locations = cursor.fetchall()
@@ -518,7 +461,6 @@ def donorRegistration():
 
 
 @app.route("/donorRegistration1", methods=['post'])
-@login_required
 def donorRegistration1():
     name = request.form.get("name")
     email = request.form.get("email")
@@ -532,13 +474,11 @@ def donorRegistration1():
 
 
 @app.route("/donateFund")
-@login_required
 def donateFund():
     return render_template("donateFund.html")
 
 
 @app.route("/donateFund1", methods=['post'])
-@login_required
 def donateFund1():
     amount = request.form.get("amount")
     cursor.execute("insert into donations(sender,receiver,amount,donation_type,date,donor_id) values('Donor', 'Administrator', '"+str(amount)+"', 'Crowd Fund', now(), '" + str(session['donor_id'])+ "')")
@@ -549,7 +489,6 @@ def donateFund1():
 
 
 @app.route("/donateAmountForCause")
-@login_required
 def donateAmountForCause():
     raise_request_id = request.args.get("raise_request_id")
     cursor.execute("select * from raise_request where raise_request_id = '"+str(raise_request_id)+"'")
@@ -561,7 +500,6 @@ def donateAmountForCause():
 
 
 @app.route("/donateAmountForCause1", methods=['post'])
-@login_required
 def donateAmountForCause1():
     remaining_amount = request.form.get("remaining_amount")
     raise_request_id = request.form.get("raise_request_id")
@@ -577,7 +515,6 @@ def donateAmountForCause1():
 
 
 @app.route("/viewFundAmount")
-@login_required
 def viewFundAmount():
     cursor.execute("select * from bankAccount")
     bankAccounts = cursor.fetchall()
@@ -591,7 +528,6 @@ def get_donor_id(donor_id):
 
 
 @app.route("/donationTransactions")
-@login_required
 def donationTransactions():
     if session['role'] == "Admin":
         cursor.execute("select * from donations")
@@ -605,11 +541,9 @@ def donationTransactions():
 
 
 @app.route("/logout")
-@login_required
 def logout():
     session.clear()
     return render_template("index.html")
 
 
 app.run(debug=True)
-
